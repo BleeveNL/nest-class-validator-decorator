@@ -1,0 +1,35 @@
+{
+    "name": "nest-class-validator-decorator",
+    "version": "1.0.0",
+    "description": "",
+    "files": [
+        "lib"
+    ],
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "typescript": {
+        "definition": "lib/index.d.ts"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Bholtland/nest-class-validator-decorator.git"
+    },
+    "author": "Berend Holtland",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Bholtland/nest-class-validator-decorator/issues"
+    },
+    "homepage": "https://github.com/Bholtland/nest-class-validator-decorator#readme",
+    "dependencies": {
+        "@nestjs/common": "^8.4.3",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.13.2",
+        "reflect-metadata": "^0.1.13"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.23"
+    }
+}
