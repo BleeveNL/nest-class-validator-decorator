@@ -30,7 +30,7 @@ export function ValidateResponse<T extends object>(
     ) => {
         const method = descriptor.value;
 
-        descriptor.value = async (...args) => {
+        descriptor.value = async function (...args) {
             const methodResponse = await method.call(this, ...args);
 
             // Deserialize returned JSON
