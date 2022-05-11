@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { ClassConstructor, plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import { validate, ValidatorOptions } from "class-validator";
 
 /**
  *  Usage:
@@ -9,19 +9,23 @@ import { validate } from "class-validator";
  *  For example: @ValidateResponse(CatDto)
  */
 
-async function validateAll(deserializedData: object[]) {
+async function validateAll(
+    deserializedData: object[],
+    options?: ValidatorOptions
+) {
     /** Validate all items and collect errors */
     return (
         await Promise.all(
             deserializedData.map(async (item) => {
-                return await validate(item);
+                return await validate(item, options);
             })
         )
     ).filter((errors) => errors.length);
 }
 
 export function ValidateResponse<T extends object>(
-    schema: ClassConstructor<T>
+    schema: ClassConstructor<T>,
+    options?: ValidatorOptions
 ) {
     return (
         target: object,
@@ -30,8 +34,12 @@ export function ValidateResponse<T extends object>(
     ) => {
         const method = descriptor.value;
 
-        descriptor.value = async function (...args) {
+        descriptor.value = async function (...args: unknown[]) {
             const methodResponse = await method.call(this, ...args);
+
+            if (!methodResponse) {
+                return methodResponse;
+            }
 
             // Deserialize returned JSON
             const deserializedData: object | object[] = plainToInstance(
@@ -43,7 +51,8 @@ export function ValidateResponse<T extends object>(
             const errors = await validateAll(
                 Array.isArray(deserializedData)
                     ? deserializedData
-                    : [deserializedData]
+                    : [deserializedData],
+                options
             );
 
             // If validation errors are present, throw an exception and add the validation errors as message.
