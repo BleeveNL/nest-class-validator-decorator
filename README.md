@@ -10,7 +10,7 @@ Add the decorator as a dependency to your project
 You can now import the decorator into your code like so:
 
 ```
-import {}
+import {ValidateResponse} from "nest-class-validator-decorator"
 
 ...
 
