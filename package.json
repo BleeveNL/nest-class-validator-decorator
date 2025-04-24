@@ -21,7 +21,7 @@
     "license": "ISC",
     "homepage": "https://github.com/BleeveNL/nest-class-validator-decorator#readme",
     "dependencies": {
-        "@nestjs/common": "^10.3.1",
+        "@nestjs/common": "^10.4.17",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "reflect-metadata": "^0.1.13"
