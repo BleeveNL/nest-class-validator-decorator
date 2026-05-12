@@ -1,6 +1,6 @@
 {
     "name": "@regionaalenergieloket/nest-class-validator-decorator",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Forked from https://github.com/Bholtland/nest-class-validator-decorator/",
     "files": [
         "lib"
