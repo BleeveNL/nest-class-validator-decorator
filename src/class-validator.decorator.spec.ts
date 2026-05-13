@@ -21,6 +21,11 @@ class Service {
     async getUsers(data: unknown) {
         return data;
     }
+
+    @ValidateResponse(UserDto, { whitelist: true, forbidNonWhitelisted: true })
+    async getUserStrict(data: unknown) {
+        return data;
+    }
 }
 
 const service = new Service();
@@ -65,6 +70,20 @@ describe('ValidateResponse', () => {
                     { name: 'Alice', age: 30 },
                     { name: 'Bob' },
                 ])
+            ).rejects.toThrow(InternalServerErrorException);
+        });
+    });
+
+    describe('extra fields', () => {
+        it('allows an extra field by default (no whitelist options)', async () => {
+            const result = await service.getUser({ name: 'Alice', age: 30, extra: 'unexpected' });
+            expect(result).toBeInstanceOf(UserDto);
+            expect(result).toMatchObject({ name: 'Alice', age: 30 });
+        });
+
+        it('throws InternalServerErrorException when forbidNonWhitelisted is set and an extra field is present', async () => {
+            await expect(
+                service.getUserStrict({ name: 'Alice', age: 30, extra: 'unexpected' })
             ).rejects.toThrow(InternalServerErrorException);
         });
     });
