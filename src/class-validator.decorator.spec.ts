@@ -22,6 +22,11 @@ class Service {
         return data;
     }
 
+    @ValidateResponse(UserDto, { whitelist: true })
+    async getUserWhitelist(data: unknown) {
+        return data;
+    }
+
     @ValidateResponse(UserDto, { whitelist: true, forbidNonWhitelisted: true })
     async getUserStrict(data: unknown) {
         return data;
@@ -75,13 +80,20 @@ describe('ValidateResponse', () => {
     });
 
     describe('extra fields', () => {
-        it('allows an extra field by default (no whitelist options)', async () => {
-            const result = await service.getUser({ name: 'Alice', age: 30, extra: 'unexpected' });
+        it('preserves an extra field when no whitelist options are set', async () => {
+            const result = await service.getUser({ name: 'Alice', age: 30, extra: 'unexpected' }) as any;
             expect(result).toBeInstanceOf(UserDto);
-            expect(result).toMatchObject({ name: 'Alice', age: 30 });
+            expect(result.extra).toBe('unexpected');
         });
 
-        it('throws InternalServerErrorException when forbidNonWhitelisted is set and an extra field is present', async () => {
+        it('strips an extra field silently when whitelist is true', async () => {
+            const result = await service.getUserWhitelist({ name: 'Alice', age: 30, extra: 'unexpected' }) as any;
+            expect(result).toBeInstanceOf(UserDto);
+            expect(result).toMatchObject({ name: 'Alice', age: 30 });
+            expect(result.extra).toBeUndefined();
+        });
+
+        it('throws InternalServerErrorException when whitelist and forbidNonWhitelisted are set and an extra field is present', async () => {
             await expect(
                 service.getUserStrict({ name: 'Alice', age: 30, extra: 'unexpected' })
             ).rejects.toThrow(InternalServerErrorException);
